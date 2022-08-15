@@ -1,5 +1,5 @@
 {
-  "name": "Tic-Tac-Toe_PROJECT",
+  "name": "tic-tac-toe-backend",
   "version": "1.0.0",
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.145.0",
