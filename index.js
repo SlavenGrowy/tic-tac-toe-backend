@@ -1,8 +1,8 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb"
 const client = new DynamoDB({ endpoint: "http://localhost:8000" });
 
+//Create a table
 (async () => {
-    const client = new DynamoDB({ endpoint: "http://localhost:8000" });
     try {
         const params = {
             AttributeDefinitions: [
@@ -40,7 +40,7 @@ const client = new DynamoDB({ endpoint: "http://localhost:8000" });
     }
 })();
 
-//put item in db
+//Create an item
 const params = {
     Item: {
         FN: {
@@ -54,6 +54,7 @@ const params = {
     TableName: "Students",
 };
 
+//Put item in db
 client.putItem(params, function(err, data) {
     if (err) {
         console.log(err, err.stack);
@@ -62,3 +63,31 @@ client.putItem(params, function(err, data) {
         console.log(data);
     }
 });
+
+//Item which we want to get
+const params = {
+    TableName: 'Students',
+    Key: {
+        'FN': {N: 98576},
+        'Name': {S: "Petar Ivanov Stoyanov"}
+    }
+};
+
+// Call DynamoDB to read the item from the table
+client.getItem(params, function(err, data) {
+    if (err) {
+        console.log("Error", err);
+    } else {
+        console.log("Success", data.Item);
+    }
+})
+
+// Call DynamoDB to delete the item from the table
+client.deleteItem(params, function(err, data) {
+    if (err) {
+        console.log("Error", err);
+    } else {
+        console.log("Success", data);
+    }
+});
+
