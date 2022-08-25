@@ -1,6 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/node
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
+<<<<<<< HEAD
+=======
+my-dynamodb-data
+>>>>>>> 05d327f31c51bfb2e9566b3a4f912f007c86bbae
 ### Node ###
 # Logs
 logs
