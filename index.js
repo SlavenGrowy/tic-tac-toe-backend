@@ -1,5 +1,10 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb"
-const client = new DynamoDB({ endpoint: "http://localhost:8000" });
+
+const node_env = process.env.NODE_ENV;
+const setup_db = process.env.SETUP_DB;
+
+if ((node_env !== 'production') && (setup_db==='true')) {
+    const client = new DynamoDB({endpoint: "http://localhost:8000"});
 
 //Create a table
     (async () => {
