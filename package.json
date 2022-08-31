@@ -11,9 +11,9 @@
     "prettier": "2.7.1"
   },
   "scripts": {
-    "db-init": "node create-table.js"
+    "db-init": "SETUP_DB=true node db-init.js"
   },
-  "main": "create-table.js",
+  "main": "db-init.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SlavenGrowy/tic-tac-toe-backend.git"
