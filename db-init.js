@@ -1,9 +1,9 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb"
 
-const { NODE_ENV, SETUP_DB=false } = process.env.NODE_ENV;
+const { NODE_ENV, SETUP_DB=false } = process.env;
 
 if (!SETUP_DB)
-    throw new Error("The database should be set to true!")
+    throw new Error("To init the database, you must set the 'SETUP_DB' env variable to 'true'!")
 
 if (NODE_ENV === 'production')
     throw new Error("The database should not be initialized in production!")
