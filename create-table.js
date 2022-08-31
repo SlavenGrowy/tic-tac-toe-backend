@@ -1,12 +1,13 @@
 import { DynamoDB } from "@aws-sdk/client-dynamodb"
 
-const node_env = process.env.NODE_ENV;
-const setup_db = process.env.SETUP_DB;
+const NODE_ENV = process.env.NODE_ENV;
+const SETUP_DB = process.env.SETUP_DB | true;
 
-if ((node_env !== 'production') && (setup_db==='true')) {
+if (NODE_ENV === 'production' && !SETUP_DB) {
+    throw new Error("Cannot create a table, because you are in production and your database is set to false!");
+} else {
     const client = new DynamoDB({endpoint: "http://localhost:8000"});
 
-//Create a table
     (async () => {
         try {
             const params = {
@@ -36,6 +37,4 @@ if ((node_env !== 'production') && (setup_db==='true')) {
             console.error(err);
         }
     })();
-} else {
-    console.log('Error');
 }
