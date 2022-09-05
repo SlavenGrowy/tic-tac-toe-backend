@@ -28,7 +28,7 @@ export class Dynamo {
         const users = await this.getOnlineUsers();
         const heartbeatInterval = 15 * 1000;
         const now = new Date().getTime();
-        const userDeleteRequests = users.filter(user=>(now - user.lastHeartbeat.S) > heartbeatInterval)
+        const userDeleteRequests = users.filter(user=>(now - user.lastHeartbeat.N) > heartbeatInterval)
             .map(user => ({
                 DeleteRequest: {
                     Key: {
