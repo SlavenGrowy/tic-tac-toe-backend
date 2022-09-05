@@ -1,56 +1,55 @@
 import {DynamoDB} from "@aws-sdk/client-dynamodb";
 
 const client = new DynamoDB({endpoint: "http://localhost:8000"});
+const tableName = "OnlineUsers";
 
 export class Dynamo {
     async addUserToOnlineList(id, username) {
         const params = {
-            TableName: "OnlineUsers",
+            TableName: tableName,
             Item: {
-                ID: {N: id},
+                id: {S: id},
                 username: {S: username},
-                heartbeat: {S: new Date().getTime()}
+                lastHeartbeat: {N: new Date().getTime()}
             },
         };
         await client.putItem(params).catch(e => console.log(e));
     }
 
-    async fetchAllUsers() {
+    async getOnlineUsers() {
         const params = {
-            TableName: "OnlineUsers",
+            TableName: tableName,
         };
         const users = await client.scan(params).catch(e => console.log(e));
         return users.Items;
     }
 
-    async deleteUsers() {
-        const users = await this.fetchAllUsers();
+    async deleteStaleUsers() {
+        const users = await this.getOnlineUsers();
+        const heartbeatInterval = 15 * 1000;
         const now = new Date().getTime();
-        const usersToDelete = users.filter(user=>(now - user.heartbeat.S) > 15000);
-
-        let params = {RequestItems: {}};
-        for (let i = 0; i < usersToDelete.length; i++) {
-            params.RequestItems["OnlineUsers"] = [];
-            params.RequestItems["OnlineUsers"].push({
+        const userDeleteRequests = users.filter(user=>(now - user.lastHeartbeat.S) > heartbeatInterval)
+            .map(user => ({
                 DeleteRequest: {
                     Key: {
-                        ID: {N: usersToDelete[i].ID.N}
+                        id: { S: user.id.S }
                     }
                 }
-            });
-        }
+            })
+            );
+        let params = { RequestItems: { OnlineUsers: userDeleteRequests } };
         await client.batchWriteItem(params).catch(e => console.log(e));
     }
 
-    async updateHeartbeat(id){
+    async updateUserHeartbeat(userId){
         const params = {
-            TableName: "OnlineUsers",
+            TableName: tableName,
             Key: {
-                ID: {N: id}
+                id: {S: userId}
             },
-            UpdateExpression: "set heartbeat = :x",
+            UpdateExpression: "set lastHeartbeat = :x",
             ExpressionAttributeValues: {
-                ":x": {S: new Date().getTime()}
+                ":x": {N: new Date().getTime()}
             }
         };
         await client.updateItem(params).catch(e => console.log(e));
