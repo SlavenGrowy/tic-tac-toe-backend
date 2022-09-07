@@ -14,13 +14,13 @@ const client = new DynamoDB({endpoint: "http://localhost:8000"});
     const params = {
         AttributeDefinitions: [
             {
-                AttributeName: "ID",
-                AttributeType: "N",
+                AttributeName: "id",
+                AttributeType: "S",
             }
         ],
         KeySchema: [
             {
-                AttributeName: "ID",
+                AttributeName: "id",
                 KeyType: "HASH"
             }
         ],
