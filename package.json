@@ -7,11 +7,13 @@
     "express": "^4.18.1"
   },
   "devDependencies": {
+    "dotenv": "^16.0.2",
     "eslint": "^8.21.0",
     "prettier": "2.7.1"
   },
   "scripts": {
-    "db-init": "SETUP_DB=true node db-init.js"
+    "db-init": "node -r dotenv/config db-init.js",
+    "start": "node src/app.js"
   },
   "main": "db-init.js",
   "repository": {
