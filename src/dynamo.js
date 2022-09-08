@@ -36,8 +36,15 @@ export class Dynamo {
                 }
             })
             );
+
+        if(!userDeleteRequests.length) {
+            console.log("No stale users to delete");
+            return;
+        }
+
+        console.log(`Deleting ${userDeleteRequests.length} users`)
         let params = { RequestItems: { OnlineUsers: userDeleteRequests } };
-        await client.batchWriteItem(params).catch(() => console.log('All expired users are deleted'));
+        await client.batchWriteItem(params).catch(e => console.error('Error while deleting stale users', e));
     }
 }
 
