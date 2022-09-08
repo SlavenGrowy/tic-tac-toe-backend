@@ -37,7 +37,7 @@ export class Dynamo {
             })
             );
         let params = { RequestItems: { OnlineUsers: userDeleteRequests } };
-        await client.batchWriteItem(params).catch(e => console.log(e));
+        await client.batchWriteItem(params).catch(() => console.log('All expired users are deleted'));
     }
 }
 

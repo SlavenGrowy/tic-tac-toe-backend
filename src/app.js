@@ -1,10 +1,15 @@
 import express from "express"
 import {Dynamo} from "./dynamo.js";
+import {heartbeatInterval} from "./constants.js";
 
 const app = express();
 app.use(express.json());
 
 const dynamo = new Dynamo();
+
+setInterval(async () => {
+    await dynamo.deleteStaleUsers();
+    }, heartbeatInterval);
 
 app.post("/heartbeat", async (req, res) => {
     try {
