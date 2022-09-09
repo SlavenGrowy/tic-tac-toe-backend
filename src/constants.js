@@ -1,2 +1,2 @@
-export const heartbeatInterval = 15 * 1000;
-export const tableName = "OnlineUsers";
+export const heartbeatInterval = 15 * 1000
+export const tableName = 'OnlineUsers'
