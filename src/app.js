@@ -1,6 +1,7 @@
 import express from 'express'
 import { Dynamo } from './dynamo.js'
 import { heartbeatInterval } from './constants.js'
+import {marshall} from "@aws-sdk/util-dynamodb";
 
 const port = process.env.PORT || 8086
 
@@ -30,7 +31,7 @@ app.post('/heartbeat', async (req, res) => {
 app.get('/online-users', async (req, res) => {
   try {
     const onlineUsers = await dynamo.getOnlineUsers()
-    res.send(onlineUsers)
+    res.send(marshall(onlineUsers))
   } catch (e) {
     console.error('Error while getting online users 😬', e)
     res.status(500).send({ message: e.message })
