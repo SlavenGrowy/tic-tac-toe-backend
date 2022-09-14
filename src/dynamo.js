@@ -1,5 +1,6 @@
 import { DynamoDB } from '@aws-sdk/client-dynamodb'
 import { heartbeatInterval, tableName } from './constants.js'
+import { unmarshall, marshall } from "@aws-sdk/util-dynamodb"
 
 const client = new DynamoDB({ endpoint: 'http://localhost:8000' })
 
@@ -7,12 +8,11 @@ export class Dynamo {
   async addUserToOnlineList(id, username) {
     const params = {
       TableName: tableName,
-      Item: {
-        id: { S: id },
-        username: { S: username },
-        lastHeartbeat: { N: new Date().getTime() }
+      Item: marshall({
+        id: id,
+        username: username ,
+        lastHeartbeat: new Date().getTime() })
       }
-    }
     await client.putItem(params)
   }
 
@@ -21,19 +21,19 @@ export class Dynamo {
       TableName: tableName
     }
     const users = await client.scan(params).catch((e) => console.log(e))
-    return users.Items
+    return users.Items.map(user => unmarshall(user))
   }
 
   async deleteStaleUsers() {
     const users = await this.getOnlineUsers()
     const now = new Date().getTime()
     const userDeleteRequests = users
-      .filter((user) => now - user.lastHeartbeat.N > heartbeatInterval)
+      .filter((user) => now - user.lastHeartbeat > heartbeatInterval)
       .map((user) => ({
         DeleteRequest: {
-          Key: {
-            id: { S: user.id.S }
-          }
+          Key: marshall({
+            id: user.id
+          })
         }
       }))
 
