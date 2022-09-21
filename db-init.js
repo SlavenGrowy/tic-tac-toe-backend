@@ -28,7 +28,7 @@ const onlineUsersParams = {
   },
   TableName: tableOnlineUsers
 }
-await client.createTable(onlineUsersParams).catch((err) => console.log(err))
+await client.createTable(onlineUsersParams).catch((e) => console.error(e))
 
 const gamesParams = {
   AttributeDefinitions: [
@@ -49,4 +49,4 @@ const gamesParams = {
   },
   TableName: tableGames
 }
-await client.createTable(gamesParams).catch((err) => console.log(err))
+await client.createTable(gamesParams).catch((e) => console.error(e))
