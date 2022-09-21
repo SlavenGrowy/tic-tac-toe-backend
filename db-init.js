@@ -1,4 +1,5 @@
 import { DynamoDB } from '@aws-sdk/client-dynamodb'
+import { tableGames, tableOnlineUsers } from './src/constants.js'
 
 const { NODE_ENV, SETUP_DB = false } = process.env
 
@@ -8,26 +9,44 @@ if (NODE_ENV === 'production') throw new Error('The database should not be initi
 
 const client = new DynamoDB({ endpoint: 'http://localhost:8000' })
 
-;(async () => {
-  const params = {
-    AttributeDefinitions: [
-      {
-        AttributeName: 'id',
-        AttributeType: 'S'
-      }
-    ],
-    KeySchema: [
-      {
-        AttributeName: 'id',
-        KeyType: 'HASH'
-      }
-    ],
-    ProvisionedThroughput: {
-      ReadCapacityUnits: 5,
-      WriteCapacityUnits: 5
-    },
-    TableName: 'OnlineUsers'
-  }
-  const createTableCommandOutput = await client.createTable(params).catch((err) => console.log)
-  console.log(createTableCommandOutput)
-})()
+const onlineUsersParams = {
+  AttributeDefinitions: [
+    {
+      AttributeName: 'id',
+      AttributeType: 'S'
+    }
+  ],
+  KeySchema: [
+    {
+      AttributeName: 'id',
+      KeyType: 'HASH'
+    }
+  ],
+  ProvisionedThroughput: {
+    ReadCapacityUnits: 5,
+    WriteCapacityUnits: 5
+  },
+  TableName: tableOnlineUsers
+}
+await client.createTable(onlineUsersParams).catch((e) => console.error(e))
+
+const gamesParams = {
+  AttributeDefinitions: [
+    {
+      AttributeName: 'id',
+      AttributeType: 'S'
+    }
+  ],
+  KeySchema: [
+    {
+      AttributeName: 'id',
+      KeyType: 'HASH'
+    }
+  ],
+  ProvisionedThroughput: {
+    ReadCapacityUnits: 5,
+    WriteCapacityUnits: 5
+  },
+  TableName: tableGames
+}
+await client.createTable(gamesParams).catch((e) => console.error(e))
