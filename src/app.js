@@ -37,5 +37,30 @@ app.get('/online-users', async (req, res) => {
   }
 })
 
+app.post('/create-game', async (req, res) => {
+  try {
+    const { users } = req.body
+    await dynamo.createGame(users)
+    return res.status(200).send()
+  } catch (e) {
+    console.error('Error while creating game 😬', e)
+    res.status(500).send({ message: e.message })
+  }
+})
+
+app.get('/my-started-game', async (req, res) => {
+  try {
+    const { userId } = req.query
+    const startedGames = await dynamo.getStartedGames(userId)
+    const gamesId = startedGames.map(({ id: gameId }) => {
+      return { gameId }
+    })
+    res.send(gamesId)
+  } catch (e) {
+    console.error('Error while getting started games 😬', e)
+    res.status(404).send({ message: e.message })
+  }
+})
+
 app.listen(port)
 console.log(`Tic-Tac-Toe backend started and listening on port ${port} 👈🥸`)
