@@ -40,9 +40,10 @@ app.get('/online-users', async (req, res) => {
 app.post('/create-game', async (req, res) => {
   try {
     const { players } = req.body
-    if (!players || !Array.isArray(players) || players.length !== 2 || players.includes('')) {
-      return res.status(400).send({ message: 'Players data is incorrect!' })
-    }
+
+    if (!players || !Array.isArray(players) || players.length !== 2 || players.includes(''))
+      return res.status(400).send({ message: "Field 'players' is not correct!" })
+
     await dynamo.createGame(players)
     res.status(200).send()
   } catch (e) {
@@ -54,18 +55,16 @@ app.post('/create-game', async (req, res) => {
 app.get('/my-started-game', async (req, res) => {
   try {
     const { playerId } = req.query
-    if (!playerId) {
-      return res.status(400).send({ message: 'Field playerId is required!' })
-    }
+
+    if (!playerId) return res.status(400).send({ message: 'Field playerId is required!' })
+
     const startedGames = await dynamo.getStartedGames(playerId)
     const gamesId = startedGames.map(({ id: gameId }) => {
       return { gameId }
     })
-    if (gamesId.length !== 0) {
-      res.send(gamesId)
-    } else {
-      return res.status(404).send({ message: 'Not found started games 😬' })
-    }
+
+    if (gamesId.length !== 0) res.send(gamesId)
+    else return res.status(404).send({ message: 'Not found started games 😬' })
   } catch (e) {
     console.error('Error while getting started games 😬', e)
     res.status(500).send({ message: e.message })
