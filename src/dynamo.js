@@ -69,7 +69,10 @@ export class Dynamo {
       TableName: tableGames
     }
     const games = await client.scan(params).catch((e) => console.error(e))
-    const regularGames = games.Items.map((game) => unmarshall(game))
+    const regularGames = games?.Items?.map((game) => unmarshall(game))
+
+    if (!regularGames) return null
+
     const userGames = regularGames.filter((game) => game.participants.includes(userId))
     return userGames.filter((game) => game.state === 'STARTED')
   }
