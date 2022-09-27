@@ -71,9 +71,12 @@ export class Dynamo {
     const games = await client.scan(params).catch((e) => console.error(e))
     const regularGames = games?.Items?.map((game) => unmarshall(game))
 
-    if (regularGames.length === 0) return null
+    if (!regularGames) return null
 
     const userGames = regularGames.filter((game) => game.participants.includes(userId))
-    return userGames.filter((game) => game.state === 'STARTED')
+    const startedGames = userGames.filter((game) => game.state === 'STARTED')
+
+    if (startedGames.length === 0) return null
+    else return startedGames
   }
 }
