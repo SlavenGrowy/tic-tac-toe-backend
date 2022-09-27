@@ -37,7 +37,7 @@ app.get('/online-users', async (req, res) => {
   }
 })
 
-app.post('/create-game', async (req, res) => {
+app.post('/game', async (req, res) => {
   try {
     const { players } = req.body
 
