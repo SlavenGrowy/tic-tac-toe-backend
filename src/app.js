@@ -56,7 +56,7 @@ app.get('/my-started-game', async (req, res) => {
   try {
     const { playerId } = req.query
 
-    if (playerId === 'null') return res.status(400).send({ message: 'Field playerId is required!' })
+    if (!playerId) return res.status(400).send({ message: 'Field playerId is required!' })
 
     const startedGames = await dynamo.getStartedGames(playerId)
 
