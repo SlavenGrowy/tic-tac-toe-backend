@@ -59,12 +59,13 @@ app.get('/my-started-game', async (req, res) => {
     if (!playerId) return res.status(400).send({ message: 'Field playerId is required!' })
 
     const startedGames = await dynamo.getStartedGames(playerId)
+
+    if (!startedGames) return res.status(404).send({ message: 'Not found started games 😬' })
+
     const gamesId = startedGames.map(({ id: gameId }) => {
       return { gameId }
     })
-
-    if (gamesId.length !== 0) res.send(gamesId)
-    else return res.status(404).send({ message: 'Not found started games 😬' })
+    res.send(gamesId)
   } catch (e) {
     console.error('Error while getting started games 😬', e)
     res.status(500).send({ message: e.message })
