@@ -1,15 +1,24 @@
 import express from 'express'
 import { Dynamo } from './dynamo.js'
 import { heartbeatInterval } from './constants.js'
+import { createServer } from 'http'
+import { Server } from 'socket.io'
 
 const port = process.env.PORT || 8086
 
 const app = express()
 app.use(express.json())
+const httpServer = createServer(app)
+const io = new Server(httpServer)
 
 const dynamo = new Dynamo()
 
 setInterval(async () => await dynamo.deleteStaleUsers(), heartbeatInterval)
+
+io.of('/game').on('connection', (socket) => {
+  console.log('Connected with client')
+  socket.emit('test', 'GameRoom')
+})
 
 app.post('/heartbeat', async (req, res) => {
   try {
@@ -72,5 +81,5 @@ app.get('/my-started-game', async (req, res) => {
   }
 })
 
-app.listen(port)
+httpServer.listen(port)
 console.log(`Tic-Tac-Toe backend started and listening on port ${port} 👈🥸`)
