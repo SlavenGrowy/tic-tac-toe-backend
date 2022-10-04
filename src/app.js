@@ -9,15 +9,22 @@ const port = process.env.PORT || 8086
 const app = express()
 app.use(express.json())
 const httpServer = createServer(app)
-const io = new Server(httpServer)
+const io = new Server(httpServer, {
+  cors: {
+    origin: '*'
+  }
+})
 
 const dynamo = new Dynamo()
 
 setInterval(async () => await dynamo.deleteStaleUsers(), heartbeatInterval)
 
 io.of('/game').on('connection', (socket) => {
-  console.log('Connected with client')
-  socket.emit('test', 'GameRoom')
+  console.log(`Connected with client ${socket.id}`)
+  socket.on('join_room', (roomId) => {
+    socket.join(roomId)
+    console.log(`Client ${socket.id} is joined to room ${roomId}!`)
+  })
 })
 
 app.post('/heartbeat', async (req, res) => {
