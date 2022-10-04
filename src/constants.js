@@ -5,3 +5,4 @@ export const gameState = {
   STARTED: 'STARTED',
   FINISHED: 'FINISHED'
 }
+export const JOIN_ROOM = 'join_room'
