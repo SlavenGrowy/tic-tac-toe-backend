@@ -1,6 +1,6 @@
 import express from 'express'
 import { Dynamo } from './dynamo.js'
-import { heartbeatInterval } from './constants.js'
+import { heartbeatInterval, JOIN_ROOM } from './constants.js'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 
@@ -21,7 +21,7 @@ setInterval(async () => await dynamo.deleteStaleUsers(), heartbeatInterval)
 
 io.of('/game').on('connection', (socket) => {
   console.log(`Connected with client ${socket.id}`)
-  socket.on('join_room', (roomId) => {
+  socket.on(JOIN_ROOM, (roomId) => {
     socket.join(roomId)
     console.log(`Client ${socket.id} is joined to room ${roomId}!`)
   })
