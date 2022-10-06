@@ -25,10 +25,11 @@ io.of('/game').on('connection', (socket) => {
   socket.on(JOIN_ROOM, (roomId) => {
     socket.join(roomId)
     console.log(`Client ${socket.id} is joined to room ${roomId}!`)
+    io.of('/game').to(roomId).emit(GAME_STATE, mockGameStateEventArgs)
   })
-  io.of('/game').to(mockGameStateEventArgs.id).emit(GAME_STATE, mockGameStateEventArgs)
   socket.on(MOVE_PLAYED, (movePlayedEventArgs) => {
     //TODO: a method for updating game_state data
+    io.of('/game').to(mockGameStateEventArgs.id).emit(GAME_STATE, mockGameStateEventArgs)
   })
 })
 
