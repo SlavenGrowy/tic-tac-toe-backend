@@ -1,5 +1,5 @@
 import { DynamoDB } from '@aws-sdk/client-dynamodb'
-import { tableGames, tableOnlineUsers } from './src/constants.js'
+import { TABLE_GAMES, TABLE_ONLINE_USERS } from './src/constants.js'
 
 const { NODE_ENV, SETUP_DB = false } = process.env
 
@@ -26,7 +26,7 @@ const onlineUsersParams = {
     ReadCapacityUnits: 5,
     WriteCapacityUnits: 5
   },
-  TableName: tableOnlineUsers
+  TableName: TABLE_ONLINE_USERS
 }
 await client.createTable(onlineUsersParams).catch((e) => console.error(e))
 
@@ -47,6 +47,6 @@ const gamesParams = {
     ReadCapacityUnits: 5,
     WriteCapacityUnits: 5
   },
-  TableName: tableGames
+  TableName: TABLE_GAMES
 }
 await client.createTable(gamesParams).catch((e) => console.error(e))
