@@ -1,8 +1,9 @@
 import express from 'express'
 import { Dynamo } from './dynamo.js'
-import { heartbeatInterval, JOIN_ROOM } from './constants.js'
+import { GAME_STATE, HEARTBEAT_INTERVAL, JOIN_ROOM, MOVE_PLAYED } from './constants.js'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import { mockGameStateEventArgs } from './gameProtocol.js'
 
 const port = process.env.PORT || 8086
 
@@ -17,13 +18,18 @@ const io = new Server(httpServer, {
 
 const dynamo = new Dynamo()
 
-setInterval(async () => await dynamo.deleteStaleUsers(), heartbeatInterval)
+setInterval(async () => await dynamo.deleteStaleUsers(), HEARTBEAT_INTERVAL)
 
 io.of('/game').on('connection', (socket) => {
   console.log(`Connected with client ${socket.id}`)
   socket.on(JOIN_ROOM, (roomId) => {
     socket.join(roomId)
     console.log(`Client ${socket.id} is joined to room ${roomId}!`)
+    io.of('/game').to(roomId).emit(GAME_STATE, mockGameStateEventArgs)
+  })
+  socket.on(MOVE_PLAYED, (movePlayedEventArgs) => {
+    //TODO: a method for updating game_state data
+    io.of('/game').to(movePlayedEventArgs.gameId).emit(GAME_STATE, mockGameStateEventArgs)
   })
 })
 

@@ -1,15 +1,15 @@
 import { DynamoDB } from '@aws-sdk/client-dynamodb'
-import { gameState, heartbeatInterval, tableGames, tableOnlineUsers } from './constants.js'
+import { GAME_STATUS, HEARTBEAT_INTERVAL, TABLE_GAMES, TABLE_ONLINE_USERS } from './constants.js'
 import { unmarshall, marshall } from '@aws-sdk/util-dynamodb'
 import crypto from 'crypto'
 
 const client = new DynamoDB({ endpoint: 'http://localhost:8000' })
-const { STARTED, FINISHED } = gameState
+const { STARTED } = GAME_STATUS
 
 export class Dynamo {
   async addUserToOnlineList(id, username) {
     const params = {
-      TableName: tableOnlineUsers,
+      TableName: TABLE_ONLINE_USERS,
       Item: marshall({
         id: id,
         username: username,
@@ -21,7 +21,7 @@ export class Dynamo {
 
   async getOnlineUsers() {
     const params = {
-      TableName: tableOnlineUsers
+      TableName: TABLE_ONLINE_USERS
     }
     const users = await client.scan(params).catch((e) => console.error(e))
     return users.Items.map((user) => unmarshall(user))
@@ -31,7 +31,7 @@ export class Dynamo {
     const users = await this.getOnlineUsers()
     const now = new Date().getTime()
     const userDeleteRequests = users
-      .filter((user) => now - user.lastHeartbeat > heartbeatInterval)
+      .filter((user) => now - user.lastHeartbeat > HEARTBEAT_INTERVAL)
       .map((user) => ({
         DeleteRequest: {
           Key: marshall({
@@ -53,7 +53,7 @@ export class Dynamo {
   async createGame(participants) {
     const id = crypto.randomUUID()
     const params = {
-      TableName: tableGames,
+      TableName: TABLE_GAMES,
       Item: marshall({
         id: id,
         participants: participants,
@@ -66,7 +66,7 @@ export class Dynamo {
 
   async getStartedGames(userId) {
     const params = {
-      TableName: tableGames
+      TableName: TABLE_GAMES
     }
     const games = await client.scan(params).catch((e) => console.error(e))
     const regularGames = games?.Items?.map((game) => unmarshall(game))
