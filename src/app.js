@@ -3,7 +3,6 @@ import { Dynamo } from './dynamo.js'
 import { GAME_STATE, HEARTBEAT_INTERVAL, JOIN_ROOM, MOVE_PLAYED } from './constants.js'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
-import { mockGameStateEventArgs } from './gameProtocol.js'
 
 const port = process.env.PORT || 8086
 
@@ -22,7 +21,7 @@ setInterval(async () => await dynamo.deleteStaleUsers(), HEARTBEAT_INTERVAL)
 
 io.of('/game').on('connection', (socket) => {
   console.log(`Connected with client ${socket.id}`)
-  socket.on(JOIN_ROOM, (roomId) => {
+  socket.on(JOIN_ROOM, async (roomId) => {
     socket.join(roomId)
     console.log(`Client ${socket.id} is joined to room ${roomId}!`)
     io.of('/game').to(roomId).emit(GAME_STATE, mockGameStateEventArgs)

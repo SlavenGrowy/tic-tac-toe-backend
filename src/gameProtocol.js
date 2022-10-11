@@ -1,8 +1,4 @@
-import { GAME_STATUS } from './constants.js'
-
-const X = 1
-const O = 0
-const EMPTY = 9
+import { EMPTY, GAME_STATUS, O, X } from './constants.js'
 
 export const mockGameStateEventArgs = {
   id: '',

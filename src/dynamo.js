@@ -1,6 +1,6 @@
 import { DynamoDB } from '@aws-sdk/client-dynamodb'
-import { GAME_STATUS, HEARTBEAT_INTERVAL, TABLE_GAMES, TABLE_ONLINE_USERS } from './constants.js'
-import { unmarshall, marshall } from '@aws-sdk/util-dynamodb'
+import { EMPTY, GAME_STATUS, HEARTBEAT_INTERVAL, TABLE_GAMES, TABLE_ONLINE_USERS } from './constants.js'
+import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 import crypto from 'crypto'
 
 const client = new DynamoDB({ endpoint: 'http://localhost:8000' })
@@ -16,7 +16,8 @@ export class Dynamo {
         lastHeartbeat: new Date().getTime()
       })
     }
-    await client.putItem(params)
+    const result = await client.putItem(params)
+    console.log(result)
   }
 
   async getOnlineUsers() {
@@ -50,15 +51,16 @@ export class Dynamo {
     await client.batchWriteItem(params).catch((e) => console.error('Error while deleting stale users', e))
   }
 
-  async createGame(participants) {
+  async createGame(players) {
     const id = crypto.randomUUID()
     const params = {
       TableName: TABLE_GAMES,
       Item: marshall({
         id: id,
-        participants: participants,
-        playerTurn: participants[Math.round(Math.random())],
-        state: STARTED
+        players: players,
+        playerTurn: players[Math.round(Math.random())],
+        state: STARTED,
+        board: [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY]
       })
     }
     await client.putItem(params)
@@ -73,10 +75,29 @@ export class Dynamo {
 
     if (!regularGames) return null
 
-    const userGames = regularGames.filter((game) => game.participants.includes(userId))
+    const userGames = regularGames.filter((game) => game.players.includes(userId))
     const startedGames = userGames.filter((game) => game.state === 'STARTED')
 
     if (startedGames.length === 0) return null
     else return startedGames
+  }
+
+  async getGameById(id) {
+    const params = {
+      TableName: TABLE_GAMES,
+      Key: marshall({ id: id })
+    }
+    return await client
+      .getItem(params)
+      .then((data) => unmarshall(data.Item))
+      .catch((e) => console.error(e))
+  }
+
+  async updateGame(game) {
+    const params = {
+      TableName: TABLE_GAMES,
+      Item: marshall({ id: game.id, ...game })
+    }
+    await client.putItem(params).catch((e) => console.error(e))
   }
 }
