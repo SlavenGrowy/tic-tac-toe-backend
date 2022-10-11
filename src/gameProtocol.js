@@ -13,6 +13,6 @@ export const mockGameStateEventArgs = {
 
 export const mockMovePlayedEventArgs = {
   gameId: '',
-  player: '',
+  playerId: '',
   move: { piece: X, position: 5 }
 }
