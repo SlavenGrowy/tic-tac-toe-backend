@@ -16,8 +16,7 @@ export class Dynamo {
         lastHeartbeat: new Date().getTime()
       })
     }
-    const result = await client.putItem(params)
-    console.log(result)
+    await client.putItem(params)
   }
 
   async getOnlineUsers() {
