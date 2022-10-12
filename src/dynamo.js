@@ -1,5 +1,5 @@
 import { DynamoDB } from '@aws-sdk/client-dynamodb'
-import { EMPTY, GAME_STATUS, HEARTBEAT_INTERVAL, TABLE_GAMES, TABLE_ONLINE_USERS } from './constants.js'
+import { EMPTY, GAME_STATUS, HEARTBEAT_INTERVAL, O, TABLE_GAMES, TABLE_ONLINE_USERS, X } from './constants.js'
 import { marshall, unmarshall } from '@aws-sdk/util-dynamodb'
 import crypto from 'crypto'
 
@@ -51,13 +51,21 @@ export class Dynamo {
   }
 
   async createGame(players) {
-    const id = crypto.randomUUID()
+    const shuffledPlayers = players.sort(() => Math.random() - 0.5)
+
+    const [first, second] = shuffledPlayers
+
+    const playerOne = this.getPlayerById(first)
+    playerOne.piece = X
+    const playerTwo = this.getPlayerById(second)
+    playerTwo.piece = O
+
     const params = {
       TableName: TABLE_GAMES,
       Item: marshall({
-        id: id,
-        players: players,
-        playerTurn: players[Math.round(Math.random())],
+        id: crypto.randomUUID(),
+        players: [playerOne, playerTwo],
+        playerTurn: first,
         state: STARTED,
         board: [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY]
       })
@@ -84,7 +92,7 @@ export class Dynamo {
   async getGameById(id) {
     const params = {
       TableName: TABLE_GAMES,
-      Key: marshall({ id: id })
+      Key: marshall({ id })
     }
     return await client
       .getItem(params)
@@ -99,4 +107,17 @@ export class Dynamo {
     }
     await client.putItem(params).catch((e) => console.error(e))
   }
+
+  async getPlayerById(id) {
+    const params = {
+      TableName: TABLE_ONLINE_USERS,
+      Key: marshall({ id })
+    }
+    return await client
+      .getItem(params)
+      .then((data) => unmarshall(data.Item))
+      .catch((e) => console.error(e))
+  }
 }
+
+
