@@ -55,9 +55,9 @@ export class Dynamo {
 
     const [first, second] = shuffledPlayers
 
-    const playerOne = this.getPlayerById(first)
+    const playerOne = await this.getPlayerById(first)
     playerOne.piece = X
-    const playerTwo = this.getPlayerById(second)
+    const playerTwo = await this.getPlayerById(second)
     playerTwo.piece = O
 
     const params = {
@@ -82,8 +82,8 @@ export class Dynamo {
 
     if (!regularGames) return null
 
-    const userGames = regularGames.filter((game) => game.players.includes(userId))
-    const startedGames = userGames.filter((game) => game.state === 'STARTED')
+    const userGames = regularGames.filter((game) => game.players.map((p) => p.id).includes(userId))
+    const startedGames = userGames.filter((game) => game.state === STARTED)
 
     if (startedGames.length === 0) return null
     else return startedGames
@@ -119,5 +119,3 @@ export class Dynamo {
       .catch((e) => console.error(e))
   }
 }
-
-

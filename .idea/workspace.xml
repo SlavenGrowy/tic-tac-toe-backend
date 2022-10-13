@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8167f3a1-d891-48f9-9caf-83827409dd4f" name="Changes" comment="Methods for add, delete and get all users">
+    <list default="true" id="8167f3a1-d891-48f9-9caf-83827409dd4f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dynamo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dynamo.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dynamo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dynamo.js" afterDir="false" />
     </list>
-    <list id="29bc8e52-70c4-48b4-b578-5989c7b8effe" name="Changes by slavi" comment="" />
+    <list id="29bc8e52-70c4-48b4-b578-5989c7b8effe" name="Changes by slavi" comment="Change gameProtocol and socket.on(MOVE_PLAYED)">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/dynamo.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/dynamo.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,6 +18,16 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="LineStatusTrackerManager">
+    <file path="$PROJECT_DIR$/src/dynamo.js">
+      <ranges>
+        <range start1="57" end1="58" start2="57" end2="58" changelist="8167f3a1-d891-48f9-9caf-83827409dd4f" />
+        <range start1="59" end1="60" start2="59" end2="60" changelist="8167f3a1-d891-48f9-9caf-83827409dd4f" />
+        <range start1="84" end1="86" start2="84" end2="86" changelist="29bc8e52-70c4-48b4-b578-5989c7b8effe" />
+        <range start1="121" end1="123" start2="121" end2="121" changelist="29bc8e52-70c4-48b4-b578-5989c7b8effe" />
+      </ranges>
+    </file>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -26,30 +38,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/ivast/Work/Tic-Tac-Toe/tic-tac-toe-backend&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/ivast/Work/Tic-Tac-Toe/tic-tac-toe-frontend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\ivast\\Work\\Tic-Tac-Toe\\tic-tac-toe-backend\\node_modules\\prettier"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ivast\Work\Tic-Tac-Toe\tic-tac-toe-backend\src" />
     </key>
   </component>
-  <component name="RunManager" selected="npm.start">
+  <component name="RunManager" selected="npm.prettier">
     <configuration name="app.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/src/app.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
     <configuration name="constants.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/src/constants.js" working-dir="$PROJECT_DIR$">
-      <method v="2" />
-    </configuration>
-    <configuration name="dynamo.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/src/dynamo.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
     <configuration name="db-init" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
@@ -57,6 +68,16 @@
       <command value="run" />
       <scripts>
         <script value="db-init" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="prettier" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="prettier" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -75,17 +96,17 @@
     <list>
       <item itemvalue="Node.js.app.js" />
       <item itemvalue="Node.js.constants.js" />
-      <item itemvalue="Node.js.dynamo.js" />
+      <item itemvalue="npm.prettier" />
       <item itemvalue="npm.start" />
       <item itemvalue="npm.db-init" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="npm.prettier" />
         <item itemvalue="npm.start" />
         <item itemvalue="Node.js.constants.js" />
         <item itemvalue="npm.db-init" />
         <item itemvalue="Node.js.app.js" />
-        <item itemvalue="Node.js.dynamo.js" />
       </list>
     </recent_temporary>
   </component>
