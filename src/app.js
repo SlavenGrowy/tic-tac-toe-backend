@@ -30,6 +30,10 @@ io.of('/game').on('connection', (socket) => {
   })
   socket.on(MOVE_PLAYED, async ({ gameId, playerId, move }) => {
     const game = await dynamo.getGameById(gameId)
+    const { piece, position } = move
+    game.board[position] = piece
+    game.playerTurn = game.players.filter((player) => player.id !== playerId)[0]
+    await dynamo.updateGame(game)
     io.of('/game').to(gameId).emit(GAME_STATE, game)
   })
 })
