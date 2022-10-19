@@ -39,7 +39,8 @@ io.of('/game').on('connection', (socket) => {
       game.playerTurn = otherPlayer.id
       await dynamo.updateGame(game)
       io.of('/game').to(gameId).emit(GAME_STATE, game)
-    }})
+    }
+  })
 })
 
 app.post('/heartbeat', async (req, res) => {
