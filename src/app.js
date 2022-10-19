@@ -3,6 +3,7 @@ import { Dynamo } from './dynamo.js'
 import { GAME_STATE, HEARTBEAT_INTERVAL, JOIN_ROOM, MOVE_PLAYED } from './constants.js'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import { isValidMove } from './utils.js'
 
 const port = process.env.PORT || 8086
 
@@ -31,12 +32,14 @@ io.of('/game').on('connection', (socket) => {
   socket.on(MOVE_PLAYED, async ({ gameId, playerId, move }) => {
     const game = await dynamo.getGameById(gameId)
     const { piece, position } = move
-    game.board[position] = piece
-    const [otherPlayer] = game.players.filter((player) => player.id !== playerId)
-    game.playerTurn = otherPlayer.id
-    await dynamo.updateGame(game)
-    io.of('/game').to(gameId).emit(GAME_STATE, game)
-  })
+
+    if (isValidMove(game, playerId, position)) {
+      game.board[position] = piece
+      const [otherPlayer] = game.players.filter((player) => player.id !== playerId)
+      game.playerTurn = otherPlayer.id
+      await dynamo.updateGame(game)
+      io.of('/game').to(gameId).emit(GAME_STATE, game)
+    }})
 })
 
 app.post('/heartbeat', async (req, res) => {
