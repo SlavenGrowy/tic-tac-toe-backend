@@ -66,6 +66,7 @@ export class Dynamo {
         id: crypto.randomUUID(),
         players: [playerOne, playerTwo],
         playerTurn: first,
+        winner: null,
         state: STARTED,
         board: [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY]
       })

@@ -7,6 +7,7 @@ export const mockGameStateEventArgs = {
     { id: '', username: '', piece: O }
   ],
   playerTurn: '',
+  winner: null,
   state: GAME_STATUS.STARTED,
   board: [EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY]
 }
