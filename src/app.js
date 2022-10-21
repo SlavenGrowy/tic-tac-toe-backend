@@ -4,7 +4,6 @@ import { GAME_STATE, GAME_STATUS, HEARTBEAT_INTERVAL, JOIN_ROOM, MOVE_PLAYED } f
 import { createServer } from 'http'
 import { Server } from 'socket.io'
 import { isGameFinished, isInvalidMove } from './utils.js'
-import { mockGameStateEventArgs } from './gameProtocol.js'
 
 const port = process.env.PORT || 8086
 
@@ -34,20 +33,18 @@ io.of('/game').on('connection', (socket) => {
     const game = await dynamo.getGameById(gameId)
     const { piece, position } = move
 
-    console.log(isInvalidMove(game, playerId, position))
-
     if (isInvalidMove(game, playerId, position)) {
+      console.log('Invalid move!')
       return
     }
 
     game.board[position] = piece
 
-    if (isGameFinished(game)) {
-      const winner = mockGameStateEventArgs.winner
+    const [isFinished, winner] = isGameFinished(game)
 
-      if (winner) game.winner = winner
-
+    if (isFinished) {
       game.state = GAME_STATUS.FINISHED
+      if (winner) game.winner = winner
     }
 
     const [otherPlayer] = game.players.filter((player) => player.id !== playerId)

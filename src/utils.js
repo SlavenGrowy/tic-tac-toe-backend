@@ -1,12 +1,11 @@
-import { EMPTY } from './constants.js'
-import { mockGameStateEventArgs } from './gameProtocol.js'
+import { EMPTY, GAME_STATUS } from './constants.js'
 
 export const isInvalidMove = (game, playerId, position) => {
   const { board, playerTurn } = game
-  return board[position] !== EMPTY || playerTurn !== playerId || isGameFinished(game)
+  return board[position] !== EMPTY || playerTurn !== playerId || game.state === GAME_STATUS.FINISHED
 }
 
-const winningCases = [
+const lines = [
   [0, 1, 2],
   [3, 4, 5],
   [6, 7, 8],
@@ -17,33 +16,30 @@ const winningCases = [
   [6, 4, 2]
 ]
 
-export const isGameFinished = (game) => {
-  return (
-    winner(game, winningCases[0]) ||
-    winner(game, winningCases[1]) ||
-    winner(game, winningCases[2]) ||
-    winner(game, winningCases[3]) ||
-    winner(game, winningCases[4]) ||
-    winner(game, winningCases[5]) ||
-    winner(game, winningCases[6]) ||
-    winner(game, winningCases[7]) ||
-    stalemate(game)
-  )
+export const isGameFinished = ({ players, board }) => {
+  let isFinished = false
+  let winner = null
+
+  for (const line of lines) {
+    const [firstPlayer, secondPlayer] = players
+    const [a, b, c] = line
+
+    if (board[a] !== EMPTY && board[a] === board[b] && board[a] === board[c]) {
+      isFinished = true
+      winner = firstPlayer.piece === board[a] ? firstPlayer.id : secondPlayer.id
+      break
+    }
+
+    if (stalemate(board)) {
+      isFinished = true
+      break
+    }
+  }
+
+  return [isFinished, winner]
 }
 
-const winner = ({ players, board }, winningCaseIndexes) => {
-  const [firstPlayer, secondPlayer] = players
-  if (
-    board[winningCaseIndexes[0]] === EMPTY ||
-    board[winningCaseIndexes[0]] !== board[winningCaseIndexes[1]] ||
-    board[winningCaseIndexes[0]] !== board[winningCaseIndexes[2]]
-  )
-    return false
-  mockGameStateEventArgs.winner = firstPlayer.piece === board[winningCaseIndexes[0]] ? firstPlayer.id : secondPlayer.id
-  return true
-}
-
-const stalemate = ({ board }) => {
+const stalemate = (board) => {
   for (let i = 0; i < board.length; i++) {
     if (board[i] === EMPTY) return false
   }
