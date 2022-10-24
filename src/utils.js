@@ -29,11 +29,10 @@ export const isGameFinished = ({ players, board }) => {
       winner = firstPlayer.piece === board[a] ? firstPlayer.id : secondPlayer.id
       break
     }
+  }
 
-    if (stalemate(board)) {
-      isFinished = true
-      break
-    }
+  if (stalemate(board)) {
+    isFinished = true
   }
 
   return [isFinished, winner]
