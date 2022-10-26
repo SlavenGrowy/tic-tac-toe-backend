@@ -34,7 +34,7 @@ io.of('/game').on('connection', (socket) => {
     const { piece, position } = move
 
     if (isInvalidMove(game, playerId, position)) {
-      console.log('Invalid move!')
+      console.log(`Player ${playerId} tried an illegal move in game ${gameId}!`)
       return
     }
 
@@ -44,7 +44,7 @@ io.of('/game').on('connection', (socket) => {
 
     if (isFinished) {
       game.state = GAME_STATUS.FINISHED
-      if (winner) game.winner = winner
+      game.winner = winner
     }
 
     const [otherPlayer] = game.players.filter((player) => player.id !== playerId)
