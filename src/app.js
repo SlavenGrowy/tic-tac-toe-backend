@@ -1,8 +1,9 @@
 import express from 'express'
 import { Dynamo } from './dynamo.js'
-import { GAME_STATE, HEARTBEAT_INTERVAL, JOIN_ROOM, MOVE_PLAYED } from './constants.js'
+import { GAME_STATE, GAME_STATUS, HEARTBEAT_INTERVAL, JOIN_ROOM, MOVE_PLAYED } from './constants.js'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
+import { isGameFinished, isInvalidMove } from './utils.js'
 
 const port = process.env.PORT || 8086
 
@@ -31,7 +32,21 @@ io.of('/game').on('connection', (socket) => {
   socket.on(MOVE_PLAYED, async ({ gameId, playerId, move }) => {
     const game = await dynamo.getGameById(gameId)
     const { piece, position } = move
+
+    if (isInvalidMove(game, playerId, position)) {
+      console.log(`Player ${playerId} tried an illegal move in game ${gameId}!`)
+      return
+    }
+
     game.board[position] = piece
+
+    const [isFinished, winner] = isGameFinished(game)
+
+    if (isFinished) {
+      game.state = GAME_STATUS.FINISHED
+      game.winner = winner
+    }
+
     const [otherPlayer] = game.players.filter((player) => player.id !== playerId)
     game.playerTurn = otherPlayer.id
     await dynamo.updateGame(game)
